@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useState, useEffect } from "react";
 import webSocket from "socket.io-client";
 
@@ -22,9 +23,6 @@ function App() {
     ws.on("addRoom", (message) => {
       console.log(message);
     });
-    ws.on("receivedMessage", (message) => {
-      console.log(message);
-    });
     ws.on("leaveRoom", (message) => {
       console.log(message);
     });
@@ -42,9 +40,10 @@ function App() {
     }
   }, [ws]);
 
-  const sendMessage = (name) => {
+  const sendMessage = (name, message) => {
     //以 emit 送訊息，並以 getMessage 為名稱送給 server 捕捉
-    ws.emit(name, "收到訊息囉！");
+    console.log(`client: ${message}, time:${moment().valueOf()}`);
+    ws.emit(name, message);
   };
 
   const changeRoom = (event) => {
@@ -72,21 +71,24 @@ function App() {
         type="button"
         value="送出訊息，只有自己收到回傳"
         onClick={() => {
-          sendMessage("getMessage");
+          const message = "送出訊息，只有自己收到回傳";
+          sendMessage("getMessage", message);
         }}
       />
       <input
         type="button"
         value="送出訊息，讓所有人收到回傳"
         onClick={() => {
-          sendMessage("getMessageAll");
+          const message = "送出訊息，讓所有人收到回傳";
+          sendMessage("getMessageAll", message);
         }}
       />
       <input
         type="button"
         value="送出訊息，除了自己外所有人收到回傳"
         onClick={() => {
-          sendMessage("getMessageLess");
+          const message = "送出訊息，除了自己外所有人收到回傳";
+          sendMessage("getMessageLess", message);
         }}
       />
     </div>
